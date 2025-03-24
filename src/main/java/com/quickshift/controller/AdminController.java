@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.quickshift.Session.AdminSession;
 import com.quickshift.entity.AdminRequest;
 import com.quickshift.entity.Member;
-import com.quickshift.entity.Shift;
 import com.quickshift.entity.Store;
 import com.quickshift.entity.Timeplan;
 import com.quickshift.form.AddStoreForm;
@@ -451,17 +450,17 @@ public class AdminController {
 			String temp = ar.getCalendar().getCDate() + ":" + ar.getTimeplan().getId() + ":" + ar.getNum();
 			requests.add(temp);
 		}
-		List<Shift> shiftList = aService.autoShift(adminRequests);
+//		List<Shift> shiftList = aService.autoShift(adminRequests);
 		List<String> shifts = new ArrayList<String>();
 		
-		for(Shift shift : shiftList) {
-			
-			String date = Integer.toString(shift.getCalendar().getCDate());
-			String plan = Long.toString(shift.getTimeplan().getId());
-			String member = shift.getMember().getName();
-			shifts.add(date + ":" + plan + ":" + member);
-		}
-		
+//		for(Shift shift : shiftList) {
+//			
+//			String date = Integer.toString(shift.getCalendar().getCDate());
+//			String plan = Long.toString(shift.getTimeplan().getId());
+//			String member = shift.getMember().getName();
+//			shifts.add(date + ":" + plan + ":" + member);
+//		}
+//		
 		model.addAttribute("plans", plans);
 		model.addAttribute("members", members);
 		model.addAttribute("requests", requests);

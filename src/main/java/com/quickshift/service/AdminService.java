@@ -1,8 +1,6 @@
 package com.quickshift.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,8 +11,6 @@ import com.quickshift.entity.Admin;
 import com.quickshift.entity.AdminRequest;
 import com.quickshift.entity.Calendar;
 import com.quickshift.entity.Member;
-import com.quickshift.entity.MemberRequest;
-import com.quickshift.entity.Shift;
 import com.quickshift.entity.Store;
 import com.quickshift.entity.Timeplan;
 import com.quickshift.form.AddStoreForm;
@@ -212,74 +208,74 @@ public class AdminService {
 //	}
 //	
 	/*=*=*=*=*=* 自動シフト作成ロジック *=*=*=*=*=*/
-	public List<Shift> autoShift(List<AdminRequest> adminRequests){
-		
-		List<Member> members = memberRep.findByStore(adminRequests.getFirst().getStore());
-		List<Shift> shifts = new ArrayList<Shift>();
-		List<MemberCount> counts = new ArrayList<MemberCount>();
-		
-		for(Member member : members) {
-			
-			MemberCount count = new MemberCount(member);
-			counts.add(count);
-		}
-		
-		for(AdminRequest adminRequest : adminRequests) {
-			
-			Store store = adminRequest.getStore();
-			Calendar calendar = adminRequest.getCalendar();
-			Timeplan timeplan = adminRequest.getTimeplan();
-			int num = adminRequest.getNum();
-			
-			List<MemberRequest> memberRequests = memberRequestRep.findByCalendarAndStoreAndTimeplan(calendar, store, timeplan);
-			
-			if(memberRequests.size() > 0) {
-				
-				List<Integer> indexes = new ArrayList<Integer>();
-				
-				for(MemberRequest memberRequest : memberRequests) {
-					
-					for(int i = 0; i < counts.size(); i++) {
-						
-						String reqName = memberRequest.getMember().getName();
-						String couName = counts.get(i).getMember().getName();
-						
-						if(reqName.equals(couName)) {
-							indexes.add(i);
-						}
-					}
-				}
-				
-				MemberCount minMemberCount = Collections.min(counts, Comparator.comparingInt(MemberCount::getCount));
-				int minCount = minMemberCount.getCount();
-				List<Integer> minIndexes = new ArrayList<Integer>();
-				
-				for(int i = 0; i < memberRequests.size(); i++) {
-					
-					for(Integer index : indexes) {
-						
-						if(i == index && counts.get(i).getCount() == minCount) {
-							
-							minIndexes.add(i);
-						}
-					}
-				}
-				
-				for(int i = 0; i < num; i++) {
-					
-					int rnd = new java.util.Random().nextInt(minIndexes.size());
-					
-					Shift shift = new Shift();
-					shift.setCalendar(calendar);
-					shift.setStore(store);
-					shift.setTimeplan(timeplan);
-					shift.setMember(members.get(minIndexes.get(rnd)));
-					shifts.add(shift);				
-				}
-			}
-		}
-		return shifts;
-	}
+//	public List<Shift> autoShift(List<AdminRequest> adminRequests){
+//		
+//		List<Member> members = memberRep.findByStore(adminRequests.getFirst().getStore());
+//		List<Shift> shifts = new ArrayList<Shift>();
+//		List<MemberCount> counts = new ArrayList<MemberCount>();
+//		
+//		for(Member member : members) {
+//			
+//			MemberCount count = new MemberCount(member);
+//			counts.add(count);
+//		}
+//		
+//		for(AdminRequest adminRequest : adminRequests) {
+//			
+//			Store store = adminRequest.getStore();
+//			Calendar calendar = adminRequest.getCalendar();
+//			Timeplan timeplan = adminRequest.getTimeplan();
+//			int num = adminRequest.getNum();
+//			
+//			List<MemberRequest> memberRequests = memberRequestRep.findByCalendarAndStoreAndTimeplan(calendar, store, timeplan);
+//			
+//			if(memberRequests.size() > 0) {
+//				
+//				List<Integer> indexes = new ArrayList<Integer>();
+//				
+//				for(MemberRequest memberRequest : memberRequests) {
+//					
+//					for(int i = 0; i < counts.size(); i++) {
+//						
+//						String reqName = memberRequest.getMember().getName();
+//						String couName = counts.get(i).getMember().getName();
+//						
+//						if(reqName.equals(couName)) {
+//							indexes.add(i);
+//						}
+//					}
+//				}
+//				
+//				MemberCount minMemberCount = Collections.min(counts, Comparator.comparingInt(MemberCount::getCount));
+//				int minCount = minMemberCount.getCount();
+//				List<Integer> minIndexes = new ArrayList<Integer>();
+//				
+//				for(int i = 0; i < memberRequests.size(); i++) {
+//					
+//					for(Integer index : indexes) {
+//						
+//						if(i == index && counts.get(i).getCount() == minCount) {
+//							
+//							minIndexes.add(i);
+//						}
+//					}
+//				}
+//				
+//				for(int i = 0; i < num; i++) {
+//					
+//					int rnd = new java.util.Random().nextInt(minIndexes.size());
+//					
+//					Shift shift = new Shift();
+//					shift.setCalendar(calendar);
+//					shift.setStore(store);
+//					shift.setTimeplan(timeplan);
+//					shift.setMember(members.get(minIndexes.get(rnd)));
+//					shifts.add(shift);				
+//				}
+//			}
+//		}
+//		return shifts;
+//	}
 	/*=*=*=*=*=* 自動シフトに必要なクラス *=*=*=*=*=*/
 	@Data
 	class MemberCount{
